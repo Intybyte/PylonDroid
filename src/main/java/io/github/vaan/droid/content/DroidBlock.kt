@@ -1,25 +1,27 @@
 package io.github.vaan.droid.content
 
 import io.github.pylonmc.rebar.block.RebarBlock
+import io.github.pylonmc.rebar.block.base.RebarGuiBlock
 import io.github.pylonmc.rebar.block.base.RebarTickingBlock
 import io.github.pylonmc.rebar.block.context.BlockBreakContext
 import io.github.pylonmc.rebar.block.context.BlockCreateContext
 import io.github.pylonmc.rebar.datatypes.RebarSerializers
+import io.github.pylonmc.rebar.util.gui.GuiItems
 import io.github.vaan.droid.PylonDroid
 import io.github.vaan.droid.data.DataRegistry
 import io.github.vaan.droid.data.DynamicDroidData
 import io.github.vaan.droid.data.StaticDroidData
 import io.github.vaan.droid.data.Valued
 import io.github.vaan.droid.data.serializers.DynamicDroidDataSerializer
-import io.github.vaan.droid.instructions.base.Operation
-import io.github.vaan.droid.instructions.base.PisaAdd
-import io.github.vaan.droid.instructions.base.PisaPrint
-import io.github.vaan.droid.instructions.base.PisaSet
+import io.github.vaan.droid.gui.CodeItem
+import io.github.vaan.droid.gui.LogItem
+import io.github.vaan.droid.gui.StartupItem
 import org.bukkit.block.Block
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
+import xyz.xenondevs.invui.gui.Gui
 
-class DroidBlock : RebarBlock, RebarTickingBlock {
+class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
     val static: StaticDroidData
     var dynamic: DynamicDroidData
 
@@ -61,16 +63,13 @@ class DroidBlock : RebarBlock, RebarTickingBlock {
     override fun tick() {
         if (!started) return
 
+        val operations = dynamic.getOperations()
+        if (operations.isEmpty()) return
+
         val pc = dynamic.registryValues[DataRegistry.PC]!!.value as Int
 
-        val operations = listOf(
-            Operation(PisaSet, arrayOf("A", "5")),
-            Operation(PisaAdd, arrayOf("A", "A", "3")),
-            Operation(PisaPrint, arrayOf("A"))
-        )
-        //val operations = dynamic.getOperations()
         if (pc >= operations.size) {
-            dynamic = dynamic.restart()
+            restart()
             dynamic.addLog("CRITICAL", "PC registry can't be greater than available operations")
             return
         }
@@ -85,6 +84,10 @@ class DroidBlock : RebarBlock, RebarTickingBlock {
         }
     }
 
+    fun restart() {
+        dynamic = dynamic.restart()
+    }
+
     override fun getDropItem(context: BlockBreakContext): ItemStack? {
         val item = defaultItem?.getItemStack() ?: return null
         item.editPersistentDataContainer { pdc ->
@@ -95,6 +98,18 @@ class DroidBlock : RebarBlock, RebarTickingBlock {
     }
 
     fun static() = StaticDroidData(key)
+
+    override fun createGui(): Gui = Gui.builder()
+        .setStructure(
+            "# # # # # # # # #",
+            "# o # c # l # # #",
+            "# # # # # # # # #"
+        )
+        .addIngredient('#', GuiItems.background())
+        .addIngredient('o', StartupItem(this))
+        .addIngredient('c', CodeItem(this))
+        .addIngredient('l', LogItem(this))
+        .build()
 
     companion object {
         val DYNAMIC_KEY = PylonDroid.key("dynamic_data")
