@@ -51,6 +51,11 @@ interface Valued<T> {
         override fun string(): String = value.toString()
     }
 
+    object EmptyVal : Valued<Any?> {
+        override val value: Any? = null
+        override val type: Class<Any?> = Any::class.java as Class<Any?>
+    }
+
     companion object {
         operator fun invoke(value: Any?): Valued<*>? = when (value) {
             is Valued<*> -> value // already wrapped
@@ -68,7 +73,7 @@ interface Valued<T> {
 
             is NamespacedKey -> KeyVal(value)
 
-            null -> null
+            null -> EmptyVal
 
             else -> error("Didn't find valid Valued for ${value::class.java.simpleName}")
         }

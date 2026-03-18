@@ -54,6 +54,10 @@ object ValuedSerializer : PersistentDataType<PersistentDataContainer, Valued<*>>
                 pdc.set(valueKey, RebarSerializers.NAMESPACED_KEY, complex.value)
             }
 
+            is Valued.EmptyVal -> {
+                pdc.set(typeKey, RebarSerializers.STRING, "empty")
+            }
+
             else -> error("Unsupported Valued type: ${complex::class.java.simpleName}")
         }
 
@@ -92,6 +96,8 @@ object ValuedSerializer : PersistentDataType<PersistentDataContainer, Valued<*>>
             "key" -> Valued.KeyVal(
                 primitive.get(valueKey, RebarSerializers.NAMESPACED_KEY)!!
             )
+
+            "empty" -> Valued.EmptyVal
 
             else -> error("Unknown Valued type: $type")
         }
