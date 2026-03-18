@@ -29,7 +29,7 @@ enum class DataRegistry : Keyed, DataAccessor {
 
     private val key: NamespacedKey = PylonDroid.Companion.key("registry_${this.name.lowercase()}")
 
-    private val strictClassType: Class<*>?
+    val strictClassType: Class<*>?
 
     constructor(strictClassType: Class<*>? = null) {
         this.strictClassType = strictClassType
