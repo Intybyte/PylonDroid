@@ -1,7 +1,7 @@
 package io.github.vaan.droid.data
 
 import io.github.vaan.droid.data.accessor.DataAccessor
-import io.github.vaan.droid.instructions.DataRegistry
+import io.github.vaan.droid.data.DataRegistry
 import io.github.vaan.droid.instructions.base.Operation
 import java.util.*
 import kotlin.collections.listOf

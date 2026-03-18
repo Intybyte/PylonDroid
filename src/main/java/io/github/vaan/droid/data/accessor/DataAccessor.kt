@@ -2,7 +2,7 @@ package io.github.vaan.droid.data.accessor
 
 import io.github.vaan.droid.data.DynamicDroidData
 import io.github.vaan.droid.data.Valued
-import io.github.vaan.droid.instructions.DataRegistry
+import io.github.vaan.droid.data.DataRegistry
 
 interface DataAccessor {
     fun get(data: DynamicDroidData): Valued<*>?

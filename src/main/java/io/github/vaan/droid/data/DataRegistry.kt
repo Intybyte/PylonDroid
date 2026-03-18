@@ -1,10 +1,8 @@
-package io.github.vaan.droid.instructions
+package io.github.vaan.droid.data
 
 import io.github.pylonmc.rebar.registry.RebarRegistry
 import io.github.vaan.droid.PylonDroid
 import io.github.vaan.droid.data.accessor.DataAccessor
-import io.github.vaan.droid.data.DynamicDroidData
-import io.github.vaan.droid.data.Valued
 import org.bukkit.Keyed
 import org.bukkit.NamespacedKey
 import java.lang.Exception
@@ -29,7 +27,7 @@ enum class DataRegistry : Keyed, DataAccessor {
     // used for entities, always UUID
     ID(Valued.UUIDVal::class.java);
 
-    private val key: NamespacedKey = PylonDroid.key("registry_${this.name.lowercase()}")
+    private val key: NamespacedKey = PylonDroid.Companion.key("registry_${this.name.lowercase()}")
 
     private val strictClassType: Class<*>?
 
@@ -50,20 +48,25 @@ enum class DataRegistry : Keyed, DataAccessor {
             return
         }
 
+        if (value != null && strictClassType != null && strictClassType != value::class.java) {
+            data.error = true
+            data.addLog("CRITICAL", "Error: ${this.name} registry only supports values of type ${strictClassType::class.java.simpleName}")
+        }
+
         rawSet(data, value)
     }
 
     companion object {
         val READ_ONLY_REGISTRIES = listOf(X, Y, Z, SS)
-        val REGISTRY_KEY = PylonDroid.key("registries")
+        val REGISTRY_KEY = PylonDroid.Companion.key("registries")
 
         val REGISTRY = RebarRegistry<DataRegistry>(REGISTRY_KEY).also {
-            RebarRegistry.addRegistry(it)
+            RebarRegistry.Companion.addRegistry(it)
         }
 
         fun of(key: String) : DataRegistry? {
             try {
-                DataRegistry.valueOf(key.uppercase()).also {
+                valueOf(key.uppercase()).also {
                     return@of it
                 }
             } catch (_: Exception) {}

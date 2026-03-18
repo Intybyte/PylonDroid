@@ -70,7 +70,7 @@ interface Valued<T> {
 
             null -> null
 
-            else -> error("Didn't find valid Valued for ${value::class.java.name}")
+            else -> error("Didn't find valid Valued for ${value::class.java.simpleName}")
         }
     }
 }

@@ -54,7 +54,7 @@ object ValuedSerializer : PersistentDataType<PersistentDataContainer, Valued<*>>
                 pdc.set(valueKey, RebarSerializers.NAMESPACED_KEY, complex.value)
             }
 
-            else -> error("Unsupported Valued type: ${complex::class.java.name}")
+            else -> error("Unsupported Valued type: ${complex::class.java.simpleName}")
         }
 
         return pdc

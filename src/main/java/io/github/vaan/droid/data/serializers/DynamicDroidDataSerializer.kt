@@ -3,7 +3,7 @@ package io.github.vaan.droid.data.serializers
 import io.github.pylonmc.rebar.datatypes.RebarSerializers
 import io.github.vaan.droid.PylonDroid
 import io.github.vaan.droid.data.DynamicDroidData
-import io.github.vaan.droid.instructions.DataRegistry
+import io.github.vaan.droid.data.DataRegistry
 import org.bukkit.persistence.PersistentDataAdapterContext
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType

@@ -1,19 +1,24 @@
 package io.github.vaan.droid
 
-import io.github.pylonmc.pylon.core.addon.PylonAddon
+import io.github.pylonmc.rebar.addon.RebarAddon
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.Locale
+import java.util.*
 
 @Suppress("unused")
-class PylonDroid : JavaPlugin(), PylonAddon {
+class PylonDroid : JavaPlugin(), RebarAddon {
 
     // Called when our plugin is enabled
     override fun onEnable() {
         _instance = this
 
         // Every Pylon addon must call this BEFORE doing anything Pylon-related
-        registerWithPylon()
+        registerWithRebar()
+        DroidInstructions.init()
+        DroidItems.init()
+        DroidPages.init()
+        DroidBlocks.init()
     }
 
     override val javaPlugin: JavaPlugin = this
@@ -29,5 +34,7 @@ class PylonDroid : JavaPlugin(), PylonAddon {
         // The public-facing, non-null instance of the addon
         val instance: PylonDroid
             get() = _instance ?: throw IllegalStateException("Plugin is not initialized yet")
+
+        fun key(str: String) = NamespacedKey(instance, str)
     }
 }

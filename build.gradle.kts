@@ -30,11 +30,12 @@ repositories {
 
 // Get dependency versions from gradle.properties
 val coreVersion = project.properties["pylon-core.version"] as String
+val rebarPosition = "/IdeaProjects/parallel-dev-repo/rebar/rebar/build/libs/rebar-1.0.0-SNAPSHOT.jar"
 
 // Download dependencies
 dependencies {
     library(kotlin("stdlib"))
-    compileOnly(files("/IdeaProjects/parallel-dev-repo/rebar/rebar/build/libs/rebar-1.0.0-SNAPSHOT.jar"))
+    compileOnly(files(rebarPosition))
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     compileOnly("io.github.pylonmc:rebar:$coreVersion")
 }
@@ -76,13 +77,14 @@ tasks.runServer {
         if (!System.getProperty("io.github.pylonmc.pylon.disableConfigReset").toBoolean()) {
             pluginsDir.deleteRecursively()
         }
+
+        pluginsDir.mkdirs()
+        copy {
+            include(rebarPosition)
+            into(pluginsDir)
+        }
     }
 
-    // Download pylon core and add it to the plugins folder
-    downloadPlugins {
-        github("pylonmc", "pylon-core", coreVersion, "pylon-core-$coreVersion.jar")
-    }
-
-    maxHeapSize = "4G"
+    maxHeapSize = "8G"
     minecraftVersion("1.21.8")
 }
