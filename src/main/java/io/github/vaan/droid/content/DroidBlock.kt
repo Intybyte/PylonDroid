@@ -41,10 +41,10 @@ class DroidBlock : RebarBlock, RebarTickingBlock {
         // bring over all info
         if (ctx is BlockCreateContext.PlayerPlace) {
             val view = ctx.item.persistentDataContainer
-            if (view.has(DYNAMIC_KEY)) {
-                dynamic = view.get(DYNAMIC_KEY, DynamicDroidDataSerializer)!!
+            dynamic = if (view.has(DYNAMIC_KEY)) {
+                view.get(DYNAMIC_KEY, DynamicDroidDataSerializer)!!
             } else {
-                dynamic = DynamicDroidData(static)
+                DynamicDroidData(static)
             }
         } else {
             dynamic = DynamicDroidData(static)
@@ -61,11 +61,6 @@ class DroidBlock : RebarBlock, RebarTickingBlock {
     override fun tick() {
         if (!started) return
 
-        if (dynamic.error || dynamic.isEnd()) {
-            dynamic = dynamic.restart()
-            return
-        }
-
         val pc = dynamic.registryValues[DataRegistry.PC]!!.value as Int
 
         val operations = listOf(
@@ -75,7 +70,7 @@ class DroidBlock : RebarBlock, RebarTickingBlock {
         )
         //val operations = dynamic.getOperations()
         if (pc >= operations.size) {
-            dynamic.error = true
+            dynamic = dynamic.restart()
             dynamic.addLog("CRITICAL", "PC registry can't be greater than available operations")
             return
         }
@@ -83,6 +78,11 @@ class DroidBlock : RebarBlock, RebarTickingBlock {
         operations[pc].execute(dynamic)
 
         dynamic.registryValues[DataRegistry.PC] = Valued.IntVal(pc + 1)
+
+        if (dynamic.error || operations.size == pc + 1) {
+            dynamic = dynamic.restart()
+            return
+        }
     }
 
     override fun getDropItem(context: BlockBreakContext): ItemStack? {

@@ -55,11 +55,6 @@ class DynamicDroidData(val static: StaticDroidData) {
         this.operations
     )
 
-    fun isEnd() : Boolean {
-        val value = registryValues[DataRegistry.PC] as Valued.IntVal
-        return value.value == (operations.size - 1)
-    }
-
     fun getOperations() : List<Operation> {
         return operations.toList()
     }
