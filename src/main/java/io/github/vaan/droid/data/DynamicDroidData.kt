@@ -1,7 +1,6 @@
 package io.github.vaan.droid.data
 
 import io.github.vaan.droid.data.accessor.DataAccessor
-import io.github.vaan.droid.data.DataRegistry
 import io.github.vaan.droid.instructions.base.Operation
 import java.util.*
 import kotlin.collections.listOf
@@ -16,7 +15,7 @@ class DynamicDroidData(val static: StaticDroidData) {
     val stack: ArrayList<Valued<*>?> = ArrayList(static.stackSize)
     var error: Boolean = false
     val log = LinkedList<String>()
-    val instructions = arrayListOf<Operation>()
+    private val operations = arrayListOf<Operation>()
 
     constructor(
         static: StaticDroidData,
@@ -24,7 +23,7 @@ class DynamicDroidData(val static: StaticDroidData) {
         stack: List<Valued<*>>,
         error: Boolean,
         log: List<String>,
-        instructions: List<Operation>
+        operations: List<Operation>
     ) : this(static) {
 
         this.registryValues.putAll(registryValues)
@@ -37,14 +36,14 @@ class DynamicDroidData(val static: StaticDroidData) {
         this.log.clear()
         this.log.addAll(log)
 
-        this.instructions.clear()
-        this.instructions.addAll(instructions)
+        this.operations.clear()
+        this.operations.addAll(operations)
     }
 
     fun accessorOf(key: String) : DataAccessor? = DataAccessor.of(this, key)
 
     fun addLog(severity: String, message: String) {
-        log.add("[$severity] $message")
+        log.add("[$severity] $message") // todo: fix DOS 2.0, cap size or whatever
     }
 
     fun restart(): DynamicDroidData = DynamicDroidData(
@@ -53,11 +52,15 @@ class DynamicDroidData(val static: StaticDroidData) {
         listOf(),
         false,
         this.log,
-        this.instructions
+        this.operations
     )
 
     fun isEnd() : Boolean {
         val value = registryValues[DataRegistry.PC] as Valued.IntVal
-        return value.value == (instructions.size - 1)
+        return value.value == (operations.size - 1)
+    }
+
+    fun getOperations() : List<Operation> {
+        return operations.toList()
     }
 }

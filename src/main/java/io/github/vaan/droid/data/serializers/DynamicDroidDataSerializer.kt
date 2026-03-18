@@ -44,7 +44,7 @@ object DynamicDroidDataSerializer : PersistentDataType<PersistentDataContainer, 
         pdc.set(stackKey, stackType, complex.stack)
         pdc.set(errorKey, RebarSerializers.BOOLEAN, complex.error)
         pdc.set(logKey, logType, complex.log)
-        pdc.set(instructionsKey, instructionsTypes, complex.instructions)
+        pdc.set(instructionsKey, instructionsTypes, complex.getOperations())
 
         return pdc
     }
