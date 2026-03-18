@@ -1,0 +1,38 @@
+package io.github.vaan.droid.instructions.base
+
+import io.github.pylonmc.rebar.registry.RebarRegistry
+import io.github.vaan.droid.PylonDroid
+import io.github.vaan.droid.data.DynamicDroidData
+import org.bukkit.Keyed
+import org.bukkit.NamespacedKey
+
+interface Instruction : Keyed {
+
+    val name: String
+    val description: String
+
+    fun getOwningInstructionSet() = BASE_INSTRUCTION_SET
+
+    override fun getKey(): NamespacedKey = PylonDroid.key(name.lowercase())
+
+    fun execute(data: DynamicDroidData, args: Array<String>)
+
+    fun init() {
+        REGISTRY.register(this)
+    }
+
+    fun failInstruction(data: DynamicDroidData, str: String) {
+        data.addLog("CRITICAL", "Error in executing $name: $str")
+        data.error = true
+    }
+
+    companion object {
+        val BASE_INSTRUCTION_SET = PylonDroid.key("base_instruction_set")
+
+        val REGISTRY_KEY = PylonDroid.key("instructions")
+
+        val REGISTRY = RebarRegistry<Instruction>(REGISTRY_KEY).also {
+            RebarRegistry.addRegistry(it)
+        }
+    }
+}
