@@ -1,5 +1,8 @@
-# Pylon Addon Template
+# PylonDroid
 
-This repo contains everything you need to get started with making a Pylon addon. For the Java version, see [here](https://github.com/pylonmc/pylon-addon-template).
+Make your own configurable androids!
 
-For more information, see the [\'Creating addons\' section in the Pylon docs](https://pylonmc.github.io/creating-addons/getting-started/).
+You can configure them thanks to our instruction set architecture, PISA (Pylon Instruction Set Architecture).
+
+It is very similar to ARM simplified assembly, 
+with instruction the droid to interact with the world
