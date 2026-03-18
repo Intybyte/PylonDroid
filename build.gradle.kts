@@ -1,31 +1,46 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
+// Specify what plugins to use
 plugins {
-    java
+    kotlin("jvm") version "2.2.0"
+    // IntelliJ plugin
     idea
-    id("com.gradleup.shadow") version "8.3.2"
+    // used to package needed dependencies into the jar
+    id("com.gradleup.shadow") version "9.2.2"
+    // used to generate plugin.yml
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
+    // used to run a test server locally
     id("xyz.jpenilla.run-paper") version "2.3.0"
-    id("io.freefair.lombok") version "8.13.1"
 }
 
+// Specify the 'group' (eg: io.github.pylonmc.myaddon)
 group = project.properties["group"]!!
 
+// Add repositories from which to download dependencies
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/") {
         name = "papermc"
     }
+    maven("https://jitpack.io") {
+        name = "JitPack"
+    }
     maven("https://repo.xenondevs.xyz/releases")
 }
 
+// Get dependency versions from gradle.properties
 val coreVersion = project.properties["pylon-core.version"] as String
+val baseVersion = project.properties["pylon-base.version"] as String
 
+// Download dependencies
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    library(kotlin("stdlib"))
+    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     compileOnly("io.github.pylonmc:pylon-core:$coreVersion")
+    compileOnly("io.github.pylonmc:pylon-base:$baseVersion")
 }
 
+// Settings for IntelliJ
 idea {
     module {
         isDownloadJavadoc = true
@@ -33,34 +48,47 @@ idea {
     }
 }
 
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+kotlin {
+    // Target JVM 21
+    jvmToolchain(21)
 }
 
+// Configuration for the output JAR
 tasks.shadowJar {
-    mergeServiceFiles()
-
-    fun doRelocate(lib: String) {
-        relocate(lib, "$group.shadowlibs.$lib")
-    }
-
-    archiveBaseName = project.name
-    archiveClassifier = null
+    archiveClassifier = ""
 }
 
+// Generate the plugin.yml file using the bukkit gradle plugin
 bukkit {
-    name = project.properties["name"] as String
+    name = project.name
     main = project.properties["main-class"] as String
     version = project.version.toString()
     apiVersion = "1.21"
-    depend = listOf("PylonCore")
+    depend = listOf("PylonCore", "PylonBase")
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
 }
 
+// Run a server using the run server gradle plugin
 tasks.runServer {
+    doFirst {
+        // Remove the plugins folder. This is so any changes to language files etc are propagated.
+        val runFolder = project.projectDir.resolve("run")
+        val pluginsDir = runFolder.resolve("plugins")
+        if (!System.getProperty("io.github.pylonmc.pylon.disableConfigReset").toBoolean()) {
+            pluginsDir.deleteRecursively()
+        }
+    }
+
+    // Download pylon core and add it to the plugins folder
     downloadPlugins {
         github("pylonmc", "pylon-core", coreVersion, "pylon-core-$coreVersion.jar")
     }
+
+    // Download pylon base and add it to the plugins folder
+    downloadPlugins {
+        github("pylonmc", "pylon-base", baseVersion, "pylon-base-$baseVersion.jar")
+    }
+
     maxHeapSize = "4G"
-    minecraftVersion("1.21.4")
+    minecraftVersion("1.21.8")
 }
