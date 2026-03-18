@@ -29,6 +29,16 @@ data class Operation(
         return result
     }
 
+    override fun toString(): String {
+        val name = instruction.name.uppercase()
+
+        return if (args.isEmpty()) {
+            name
+        } else {
+            "$name ${args.joinToString(", ")}"
+        }
+    }
+
     companion object {
         fun of(str: String): Operation? {
             // "ADD A, #1, #2"
