@@ -30,14 +30,13 @@ repositories {
 
 // Get dependency versions from gradle.properties
 val coreVersion = project.properties["pylon-core.version"] as String
-val baseVersion = project.properties["pylon-base.version"] as String
 
 // Download dependencies
 dependencies {
     library(kotlin("stdlib"))
+    compileOnly(files("/IdeaProjects/parallel-dev-repo/rebar/rebar/build/libs/rebar-1.0.0-SNAPSHOT.jar"))
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
-    compileOnly("io.github.pylonmc:pylon-core:$coreVersion")
-    compileOnly("io.github.pylonmc:pylon-base:$baseVersion")
+    compileOnly("io.github.pylonmc:rebar:$coreVersion")
 }
 
 // Settings for IntelliJ
@@ -82,11 +81,6 @@ tasks.runServer {
     // Download pylon core and add it to the plugins folder
     downloadPlugins {
         github("pylonmc", "pylon-core", coreVersion, "pylon-core-$coreVersion.jar")
-    }
-
-    // Download pylon base and add it to the plugins folder
-    downloadPlugins {
-        github("pylonmc", "pylon-base", baseVersion, "pylon-base-$baseVersion.jar")
     }
 
     maxHeapSize = "4G"
