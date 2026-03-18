@@ -40,8 +40,12 @@ class DroidBlock : RebarBlock, RebarTickingBlock {
     constructor(block: Block, ctx: BlockCreateContext) : super(block, ctx) {
         // bring over all info
         if (ctx is BlockCreateContext.PlayerPlace) {
-            val dynamicTemp = ctx.item.persistentDataContainer.get(DYNAMIC_KEY, DynamicDroidDataSerializer)
-            dynamic = dynamicTemp ?: DynamicDroidData(static)
+            val view = ctx.item.persistentDataContainer
+            if (view.has(DYNAMIC_KEY)) {
+                dynamic = view.get(DYNAMIC_KEY, DynamicDroidDataSerializer)!!
+            } else {
+                dynamic = DynamicDroidData(static)
+            }
         } else {
             dynamic = DynamicDroidData(static)
         }
