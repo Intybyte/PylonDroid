@@ -67,7 +67,7 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
         val operations = dynamic.getOperations()
         if (operations.isEmpty()) return
 
-        val pc = dynamic.registryValues[DataRegistry.PC]!!.value as Int
+        val pc = (dynamic.registryValues[DataRegistry.PC]!!.value as Int).coerceAtLeast(0)
 
         if (pc >= operations.size) {
             restart()
@@ -81,14 +81,15 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
         }
         op.execute(dynamic)
 
-        dynamic.registryValues[DataRegistry.PC] = Valued.IntVal(pc + 1)
+        val newPc = (DataRegistry.PC.get(dynamic).value as Int) + 1
+        DataRegistry.PC.set(dynamic, Valued.IntVal(newPc))
 
         if (dynamic.error) {
             restartWithError()
             return
         }
 
-        if (operations.size == pc + 1) {
+        if (operations.size == newPc) {
             restart()
             return
         }
