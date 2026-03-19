@@ -12,19 +12,11 @@ interface DataAccessor {
      */
     fun set(data: DynamicDroidData, value: Valued<*>)
 
-    fun set(data: DynamicDroidData, value: Any?) {
-        set(data, Valued(value))
-    }
-
     /**
      * We change stuff internally
      */
     fun rawSet(data: DynamicDroidData, value: Valued<*>) {
         set(data, value)
-    }
-
-    fun rawSet(data: DynamicDroidData, value: Any?) {
-        rawSet(data, Valued(value))
     }
 
     companion object {

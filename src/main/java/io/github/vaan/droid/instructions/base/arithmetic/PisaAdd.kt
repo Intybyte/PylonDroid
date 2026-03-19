@@ -1,6 +1,7 @@
 package io.github.vaan.droid.instructions.base.arithmetic
 
 import io.github.vaan.droid.data.DynamicDroidData
+import io.github.vaan.droid.data.Valued
 import io.github.vaan.droid.instructions.base.PisaBase
 
 object PisaAdd : PisaBase("ADD", "Adds two numbers") {
@@ -36,6 +37,6 @@ object PisaAdd : PisaBase("ADD", "Adds two numbers") {
             else -> arg1.toInt() + arg2.toInt()
         }
 
-        accessors[0]!!.set(data, result)
+        accessors[0]!!.set(data, Valued(result))
     }
 }

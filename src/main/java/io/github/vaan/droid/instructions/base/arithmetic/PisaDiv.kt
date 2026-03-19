@@ -1,6 +1,7 @@
 package io.github.vaan.droid.instructions.base.arithmetic
 
 import io.github.vaan.droid.data.DynamicDroidData
+import io.github.vaan.droid.data.Valued
 import io.github.vaan.droid.instructions.base.PisaBase
 
 object PisaDiv : PisaBase("DIV", "Divides two numbers, result saved in A, modulo in D") {
@@ -43,7 +44,7 @@ object PisaDiv : PisaBase("DIV", "Divides two numbers, result saved in A, modulo
             else -> arg1.toInt() % arg2.toInt()
         }
 
-        data.accessorOf("A")!!.set(data, result)
-        data.accessorOf("D")!!.set(data, modulo)
+        data.accessorOf("A")!!.set(data, Valued(result))
+        data.accessorOf("D")!!.set(data, Valued(modulo))
     }
 }
