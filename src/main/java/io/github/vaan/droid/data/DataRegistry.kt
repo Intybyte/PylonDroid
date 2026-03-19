@@ -25,7 +25,9 @@ enum class DataRegistry : Keyed, DataAccessor {
     TZ(Valued.IntVal::class.java),
 
     // used for entities, always UUID
-    ID(Valued.UUIDVal::class.java);
+    ID(Valued.UUIDVal::class.java),
+    // debug registry
+    DBG(Valued.IntVal::class.java);
 
     private val key: NamespacedKey = PylonDroid.Companion.key("registry_${this.name.lowercase()}")
 
