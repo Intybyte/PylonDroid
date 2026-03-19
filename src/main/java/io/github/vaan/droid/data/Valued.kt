@@ -33,9 +33,10 @@ interface Valued<T> {
         override val number: Number = value
     }
 
-    data class StringVal(override val value: String) : Valued<String>, CanBeString {
+    data class StringVal(override val value: String) : Valued<String>, CanBeString, Jumpable {
         override val type = String::class.java
 
+        override fun evaluate(data: DynamicDroidData): Int? = data.labels[value]
         override fun string(): String = value
     }
 
