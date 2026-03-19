@@ -39,18 +39,18 @@ enum class DataRegistry : Keyed, DataAccessor {
 
     override fun getKey(): NamespacedKey = key
 
-    override fun get(data: DynamicDroidData): Valued<*>? = data.registryValues[this]
+    override fun get(data: DynamicDroidData): Valued<*> = data.registryValues[this]!!
 
-    override fun rawSet(data: DynamicDroidData, value: Valued<*>?) = data.registryValues.set(this, value)
+    override fun rawSet(data: DynamicDroidData, value: Valued<*>) = data.registryValues.set(this, value)
 
-    override fun set(data: DynamicDroidData, value: Valued<*>?) {
+    override fun set(data: DynamicDroidData, value: Valued<*>) {
         if (this in READ_ONLY_REGISTRIES) {
             data.error = true
             data.addLog("CRITICAL", "Error: ${this.name} registry is read only")
             return
         }
 
-        if (value != null && strictClassType != null && strictClassType != value::class.java) {
+        if (strictClassType != null && strictClassType != value::class.java) {
             data.error = true
             data.addLog("CRITICAL", "Error: ${this.name} registry only supports values of type ${strictClassType::class.java.simpleName}")
         }

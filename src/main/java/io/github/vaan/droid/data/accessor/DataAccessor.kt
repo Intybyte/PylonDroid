@@ -5,12 +5,12 @@ import io.github.vaan.droid.data.Valued
 import io.github.vaan.droid.data.DataRegistry
 
 interface DataAccessor {
-    fun get(data: DynamicDroidData): Valued<*>?
+    fun get(data: DynamicDroidData): Valued<*>
 
     /**
      * Assembly code changes stuff
      */
-    fun set(data: DynamicDroidData, value: Valued<*>?)
+    fun set(data: DynamicDroidData, value: Valued<*>)
 
     fun set(data: DynamicDroidData, value: Any?) {
         set(data, Valued(value))
@@ -19,12 +19,12 @@ interface DataAccessor {
     /**
      * We change stuff internally
      */
-    fun rawSet(data: DynamicDroidData, value: Valued<*>?) {
+    fun rawSet(data: DynamicDroidData, value: Valued<*>) {
         set(data, value)
     }
 
     fun rawSet(data: DynamicDroidData, value: Any?) {
-        rawSet(data, value)
+        rawSet(data, Valued(value))
     }
 
     companion object {
