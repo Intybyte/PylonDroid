@@ -3,7 +3,6 @@ package io.github.vaan.droid.instructions.base.jump
 import io.github.vaan.droid.data.DataRegistry
 import io.github.vaan.droid.data.DynamicDroidData
 import io.github.vaan.droid.data.Valued
-import io.github.vaan.droid.instructions.base.Jumpable
 import io.github.vaan.droid.instructions.base.PisaBase
 
 object PisaJmp : PisaBase("JMP", "Label, useful for jumping") {
