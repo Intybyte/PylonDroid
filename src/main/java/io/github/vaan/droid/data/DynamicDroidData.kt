@@ -2,10 +2,9 @@ package io.github.vaan.droid.data
 
 import io.github.vaan.droid.data.accessor.DataAccessor
 import io.github.vaan.droid.instructions.base.Operation
+import io.github.vaan.droid.instructions.base.jump.PisaLabel
 import org.bukkit.Bukkit
 import java.util.*
-import kotlin.collections.listOf
-import kotlin.collections.mapOf
 
 class DynamicDroidData(val static: StaticDroidData) {
     val registryValues = EnumMap<DataRegistry, Valued<*>>(DataRegistry::class.java).also { map ->
@@ -30,7 +29,9 @@ class DynamicDroidData(val static: StaticDroidData) {
 
     var error: Boolean = false
     val log = LinkedList<String>()
-    val operations = arrayListOf<Operation>()
+
+    private val operations = arrayListOf<Operation>()
+    val labels = HashMap<String, Int>()
 
     constructor(
         static: StaticDroidData,
@@ -55,8 +56,7 @@ class DynamicDroidData(val static: StaticDroidData) {
         this.log.clear()
         this.log.addAll(log)
 
-        this.operations.clear()
-        this.operations.addAll(operations)
+        setOperations(operations)
     }
 
     fun accessorOf(key: String) : DataAccessor? = DataAccessor.of(this, key)
@@ -77,5 +77,20 @@ class DynamicDroidData(val static: StaticDroidData) {
 
     fun getOperations() : List<Operation> {
         return operations.toList()
+    }
+
+    fun setOperations(ops: Collection<Operation>) {
+        operations.clear()
+        operations.addAll(ops)
+        labels.clear()
+        labels.putAll(operations.filter {
+            it.args.size == 1
+        }.mapIndexed { i, op ->
+            if (op.instruction != PisaLabel) {
+                null
+            } else {
+                op.args[0] to i
+            }
+        }.filterNotNull())
     }
 }
