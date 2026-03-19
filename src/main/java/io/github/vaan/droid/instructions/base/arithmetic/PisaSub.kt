@@ -4,7 +4,7 @@ import io.github.vaan.droid.data.DynamicDroidData
 import io.github.vaan.droid.data.Valued
 import io.github.vaan.droid.instructions.base.PisaBase
 
-object PisaSub : PisaBase("Sub", "Subtracts two numbers") {
+object PisaSub : PisaBase("SUB", "Subtracts two numbers") {
     override fun execute(data: DynamicDroidData, args: Array<String>) {
         if (args.size != 3) {
             failInstruction(data, "Must have 3 arguments")
