@@ -16,6 +16,7 @@ import io.github.vaan.droid.data.serializers.DynamicDroidDataSerializer
 import io.github.vaan.droid.gui.CodeItem
 import io.github.vaan.droid.gui.LogItem
 import io.github.vaan.droid.gui.StartupItem
+import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
@@ -82,14 +83,25 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
 
         dynamic.registryValues[DataRegistry.PC] = Valued.IntVal(pc + 1)
 
-        if (dynamic.error || operations.size == pc + 1) {
-            dynamic = dynamic.restart()
+        if (dynamic.error) {
+            restartWithError()
+            return
+        }
+
+        if (operations.size == pc + 1) {
+            restart()
             return
         }
     }
 
     fun restart() {
         dynamic = dynamic.restart()
+    }
+
+    fun restartWithError() {
+        restart()
+        started = false
+        block.world.playSound(ERROR_SOUND, net.kyori.adventure.sound.Sound.Emitter.self())
     }
 
     override fun getDropItem(context: BlockBreakContext): ItemStack? {
@@ -118,5 +130,11 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
     companion object {
         val DYNAMIC_KEY = PylonDroid.key("dynamic_data")
         val STARTED_KEY = PylonDroid.key("started")
+
+        val ERROR_SOUND = net.kyori.adventure.sound.Sound.sound {
+            it.type(Sound.BLOCK_ANVIL_BREAK)
+            it.source(net.kyori.adventure.sound.Sound.Source.AMBIENT)
+            it.pitch(0.2f)
+        }
     }
 }
