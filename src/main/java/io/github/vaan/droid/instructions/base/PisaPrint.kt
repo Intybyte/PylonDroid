@@ -16,6 +16,6 @@ object PisaPrint : PisaBase("PRINT", "Prints something") {
             return
         }
 
-        Bukkit.broadcastMessage("${accessor.get(data)?.value?.toString()}")
+        data.addLog("PRINT", "${accessor.get(data).value?.toString()}")
     }
 }
