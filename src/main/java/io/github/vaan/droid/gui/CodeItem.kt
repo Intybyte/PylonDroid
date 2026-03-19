@@ -85,7 +85,7 @@ class CodeItem(droid: DroidBlock) : DroidItem(
         }
 
         audience.sendMessage(Component.text("Successful update"))
-        droid.dynamic.operations.clear()
-        droid.dynamic.operations.addAll(list as Collection<out Operation>)
+        droid.dynamic.setOperations(list as Collection<out Operation>)
+        droid.restart()
     }
 }
