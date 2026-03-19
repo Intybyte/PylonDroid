@@ -97,11 +97,11 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
 
     fun restart() {
         dynamic = dynamic.restart()
+        started = false
     }
 
     fun restartWithError() {
         restart()
-        started = false
         block.world.playSound(ERROR_SOUND, net.kyori.adventure.sound.Sound.Emitter.self())
     }
 
