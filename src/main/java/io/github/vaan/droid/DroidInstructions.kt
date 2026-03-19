@@ -1,14 +1,10 @@
 package io.github.vaan.droid
 
 import io.github.vaan.droid.instructions.base.PisaNop
-import io.github.vaan.droid.instructions.base.arithmetic.PisaAdd
-import io.github.vaan.droid.instructions.base.arithmetic.PisaDiv
-import io.github.vaan.droid.instructions.base.arithmetic.PisaMul
 import io.github.vaan.droid.instructions.base.PisaPrint
 import io.github.vaan.droid.instructions.base.PisaSet
-import io.github.vaan.droid.instructions.base.arithmetic.PisaSub
-import io.github.vaan.droid.instructions.base.jump.PisaJmp
-import io.github.vaan.droid.instructions.base.jump.PisaLabel
+import io.github.vaan.droid.instructions.base.arithmetic.*
+import io.github.vaan.droid.instructions.base.jump.*
 
 object DroidInstructions {
     fun init() {
@@ -24,6 +20,18 @@ object DroidInstructions {
 
         // jmp instructions
         PisaLabel.init()
+        PisaBl.init()
+        PisaRet.init()
         PisaJmp.init()
+
+        // jmp conditionals
+        PisaCmp.init()
+        PisaJmp.init()
+        PisaJe.init()
+        PisaJne.init()
+        PisaJlt.init()
+        PisaJgt.init()
+        PisaJle.init()
+        PisaJge.init()
     }
 }

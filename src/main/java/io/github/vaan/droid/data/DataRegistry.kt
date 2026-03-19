@@ -12,7 +12,7 @@ enum class DataRegistry : Keyed, DataAccessor {
     SS(Valued.IntVal::class.java), // stack size, read only
     PC(Valued.IntVal::class.java), // program counter
     LR(Valued.IntVal::class.java), // link register
-    CMP(Valued.IntVal::class.java), // comparing registries
+    CMP(Valued.IntVal::class.java), // comparing registries, -1 less, 0 equal, 1 more
 
     // registries for block position, read only
     X(Valued.IntVal::class.java),

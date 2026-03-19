@@ -5,9 +5,13 @@ import io.github.vaan.droid.instructions.base.jump.Jumpable
 import org.bukkit.NamespacedKey
 import java.util.UUID
 
-interface Valued<T> {
+interface Valued<T> : Cloneable {
     val value: T
     val type: Class<T>
+
+    public override fun clone(): Valued<*> {
+        return Valued(this)
+    }
 
     interface CanBeString {
         fun string(): String
