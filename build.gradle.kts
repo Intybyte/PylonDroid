@@ -31,13 +31,16 @@ repositories {
 // Get dependency versions from gradle.properties
 val coreVersion = project.properties["pylon-core.version"] as String
 val rebarPosition = "/IdeaProjects/parallel-dev-repo/rebar/rebar/build/libs/rebar-1.0.0-SNAPSHOT.jar"
+val userProfile: String = System.getenv("USERPROFILE")
 
 // Download dependencies
 dependencies {
-    library(kotlin("stdlib"))
-    compileOnly(files(rebarPosition))
-    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
-    compileOnly("io.github.pylonmc:rebar:$coreVersion")
+    compileOnly(kotlin("stdlib"))
+    compileOnly(files("$userProfile/$rebarPosition"))
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+
+    compileOnly("xyz.xenondevs.invui:invui:2.0.0-beta.1")
+    compileOnly("xyz.xenondevs.invui:invui-kotlin:2.0.0-beta.1")
 }
 
 // Settings for IntelliJ
@@ -64,7 +67,7 @@ bukkit {
     main = project.properties["main-class"] as String
     version = project.version.toString()
     apiVersion = "1.21"
-    depend = listOf("PylonCore", "PylonBase")
+    depend = listOf("Rebar")
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
 }
 
@@ -73,6 +76,7 @@ tasks.runServer {
     doFirst {
         // Remove the plugins folder. This is so any changes to language files etc are propagated.
         val runFolder = project.projectDir.resolve("run")
+        runFolder.resolve("eula.txt").writeText("eula=true")
         val pluginsDir = runFolder.resolve("plugins")
         if (!System.getProperty("io.github.pylonmc.pylon.disableConfigReset").toBoolean()) {
             pluginsDir.deleteRecursively()
@@ -80,11 +84,13 @@ tasks.runServer {
 
         pluginsDir.mkdirs()
         copy {
-            include(rebarPosition)
+            from("$userProfile/IdeaProjects/parallel-dev-repo/rebar/rebar/build/libs/") {
+                include("*.jar")
+            }
             into(pluginsDir)
         }
     }
 
     maxHeapSize = "8G"
-    minecraftVersion("1.21.8")
+    minecraftVersion("1.21.11")
 }
