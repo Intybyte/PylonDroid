@@ -21,10 +21,11 @@ interface Valued<T> {
         fun numberString() = number.toString()
     }
 
-    data class IntVal(override val value: Int) : Valued<Int>, IsNumber {
+    data class IntVal(override val value: Int) : Valued<Int>, IsNumber, Jumpable {
         override val type = Int::class.java
 
         override val number: Number = value
+        override fun evaluate(data: DynamicDroidData): Int = value
     }
 
     data class DoubleVal(override val value: Double) : Valued<Double>, IsNumber {
@@ -64,7 +65,7 @@ interface Valued<T> {
     }
 
     companion object {
-        operator fun invoke(value: Any?): Valued<*>? = when (value) {
+        operator fun invoke(value: Any?): Valued<*> = when (value) {
             is Valued<*> -> value // already wrapped
 
             is Int -> IntVal(value)

@@ -83,13 +83,11 @@ class DynamicDroidData(val static: StaticDroidData) {
         operations.clear()
         operations.addAll(ops)
         labels.clear()
-        labels.putAll(operations.filter {
-            it.args.size == 1
-        }.mapIndexed { i, op ->
-            if (op.instruction != PisaLabel) {
-                null
-            } else {
+        labels.putAll(operations.mapIndexed { i, op ->
+            if (op.instruction == PisaLabel && op.args.size == 1) {
                 op.args[0] to i
+            } else {
+                null
             }
         }.filterNotNull())
     }

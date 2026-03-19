@@ -19,7 +19,7 @@ object PisaJmp : PisaBase("JMP", "Label, useful for jumping") {
         }
 
         val valued = accessor.get(data)
-        val jumpable = valued.value as? Jumpable ?: (valued as? Valued.CanBeString)?.stringValued()
+        val jumpable = valued as? Jumpable ?: (valued as? Valued.CanBeString)?.stringValued()
         if (jumpable == null) {
             failInstruction(data, "Argument is not jumpable")
             return
@@ -31,7 +31,7 @@ object PisaJmp : PisaBase("JMP", "Label, useful for jumping") {
             return
         }
 
-        DataRegistry.PC.set(data, toJump)
+        DataRegistry.PC.set(data, Valued(toJump))
 
     }
 }
