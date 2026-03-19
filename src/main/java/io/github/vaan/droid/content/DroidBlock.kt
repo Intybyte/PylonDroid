@@ -16,6 +16,7 @@ import io.github.vaan.droid.data.serializers.DynamicDroidDataSerializer
 import io.github.vaan.droid.gui.CodeItem
 import io.github.vaan.droid.gui.LogItem
 import io.github.vaan.droid.gui.StartupItem
+import io.github.vaan.droid.instructions.base.PisaComment
 import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.inventory.ItemStack
@@ -67,11 +68,21 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
         val operations = dynamic.getOperations()
         if (operations.isEmpty()) return
 
-        val pc = (dynamic.registryValues[DataRegistry.PC]!!.value as Int).coerceAtLeast(0)
+        var pc = (dynamic.registryValues[DataRegistry.PC]!!.value as Int).coerceAtLeast(0)
 
         if (pc >= operations.size) {
             restart()
             dynamic.addLog("CRITICAL", "PC registry can't be greater than available operations")
+            return
+        }
+
+        // skips comments
+        while (pc < operations.size && operations[pc] == PisaComment) {
+            pc++
+        }
+
+        if (pc >= operations.size) {
+            restart()
             return
         }
 
@@ -89,7 +100,7 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
             return
         }
 
-        if (operations.size == newPc) {
+        if (operations.size <= newPc) {
             restart()
             return
         }

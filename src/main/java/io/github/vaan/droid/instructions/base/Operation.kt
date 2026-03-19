@@ -45,9 +45,12 @@ data class Operation(
             val parts = str.trim().split(Regex("\\s+"), limit = 2)
 
             val opcode = parts[0].lowercase()
-            val key = PylonDroid.key(opcode)
-
-            val instruction = Instruction.REGISTRY[key] ?: return null
+            val instruction = if (opcode != ";") {
+                val key = PylonDroid.key(opcode)
+                Instruction.REGISTRY[key] ?: return null
+            } else {
+                PisaComment
+            }
 
             val args = parts.getOrNull(1)
                 ?.split(",")
