@@ -1,8 +1,9 @@
-package io.github.vaan.droid.instructions.base
+package io.github.vaan.droid.instructions.base.arithmetic
 
 import io.github.vaan.droid.data.DynamicDroidData
+import io.github.vaan.droid.instructions.base.PisaBase
 
-object PisaAdd : PisaBase("ADD", "Adds two numbers") {
+object PisaSub : PisaBase("Sub", "Subtracts two numbers") {
     override fun execute(data: DynamicDroidData, args: Array<String>) {
         if (args.size != 3) {
             failInstruction(data, "Must have 3 arguments")
@@ -29,10 +30,10 @@ object PisaAdd : PisaBase("ADD", "Adds two numbers") {
         }
 
         val result = when {
-            arg1 is Double || arg2 is Double -> arg1.toDouble() + arg2.toDouble()
-            arg1 is Float  || arg2 is Float  -> arg1.toFloat() + arg2.toFloat()
-            arg1 is Long   || arg2 is Long   -> arg1.toLong() + arg2.toLong()
-            else -> arg1.toInt() + arg2.toInt()
+            arg1 is Double || arg2 is Double -> arg1.toDouble() - arg2.toDouble()
+            arg1 is Float  || arg2 is Float  -> arg1.toFloat() - arg2.toFloat()
+            arg1 is Long   || arg2 is Long   -> arg1.toLong() - arg2.toLong()
+            else -> arg1.toInt() - arg2.toInt()
         }
 
         accessors[0]!!.set(data, result)

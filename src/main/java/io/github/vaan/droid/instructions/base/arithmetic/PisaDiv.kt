@@ -1,6 +1,7 @@
-package io.github.vaan.droid.instructions.base
+package io.github.vaan.droid.instructions.base.arithmetic
 
 import io.github.vaan.droid.data.DynamicDroidData
+import io.github.vaan.droid.instructions.base.PisaBase
 
 object PisaDiv : PisaBase("DIV", "Divides two numbers, result saved in A, modulo in D") {
     override fun execute(data: DynamicDroidData, args: Array<String>) {
