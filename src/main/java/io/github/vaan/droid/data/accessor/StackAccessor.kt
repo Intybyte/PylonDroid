@@ -4,9 +4,9 @@ import io.github.vaan.droid.data.DynamicDroidData
 import io.github.vaan.droid.data.Valued
 
 class StackAccessor(val index: Int) : DataAccessor {
-    override fun get(data: DynamicDroidData): Valued<*>? = data.stack[index]
+    override fun get(data: DynamicDroidData): Valued<*> = data.stack[index]!!
 
-    override fun set(data: DynamicDroidData, value: Valued<*>?) {
+    override fun set(data: DynamicDroidData, value: Valued<*>) {
         data.stack[index] = value
     }
 

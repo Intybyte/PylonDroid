@@ -1,5 +1,7 @@
 package io.github.vaan.droid.data
 
+import io.github.vaan.droid.data.accessor.ConstantAccessor
+import io.github.vaan.droid.instructions.base.jump.Jumpable
 import org.bukkit.NamespacedKey
 import java.util.UUID
 
@@ -9,10 +11,14 @@ interface Valued<T> {
 
     interface CanBeString {
         fun string(): String
+
+        fun stringValued() = StringVal(string())
     }
 
     interface IsNumber {
         val number: Number
+
+        fun numberString() = number.toString()
     }
 
     data class IntVal(override val value: Int) : Valued<Int>, IsNumber {
@@ -68,7 +74,7 @@ interface Valued<T> {
             is Short -> IntVal(value.toInt())
             is Byte -> IntVal(value.toInt())
 
-            is String -> StringVal(value)
+            is String -> parseString(value)
 
             is UUID -> UUIDVal(value)
 
@@ -77,6 +83,32 @@ interface Valued<T> {
             null -> EmptyVal
 
             else -> error("Didn't find valid Valued for ${value::class.java.simpleName}")
+        }
+
+        fun parseString(str: String): Valued<out Comparable<*>> {
+            val trimmed = str.trim()
+
+            trimmed.toIntOrNull()?.let { return IntVal(it) }
+
+            trimmed.toDoubleOrNull()?.let { return DoubleVal(it) }
+
+            try {
+                val uuid = UUID.fromString(trimmed)
+                return UUIDVal(uuid)
+            } catch (_: IllegalArgumentException) { /* not a UUID */ }
+
+            if (":" in trimmed) {
+                val parts = trimmed.split(":", limit = 2)
+                if (parts.size == 2) {
+                    val key = NamespacedKey(parts[0], parts[1])
+                    return KeyVal(key)
+                }
+            }
+
+            // TODO: material support
+            // TODO: maybe string support, needs to refine argument parsing maybe
+
+            return StringVal(str)
         }
     }
 }
