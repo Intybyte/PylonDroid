@@ -2,6 +2,7 @@ package io.github.vaan.droid.instructions.base
 
 import io.github.pylonmc.rebar.registry.RebarRegistry
 import io.github.vaan.droid.PylonDroid
+import io.github.vaan.droid.data.DataRegistry
 import io.github.vaan.droid.data.DynamicDroidData
 import org.bukkit.Keyed
 import org.bukkit.NamespacedKey
@@ -22,7 +23,8 @@ interface Instruction : Keyed {
     }
 
     fun failInstruction(data: DynamicDroidData, str: String) {
-        data.addLog("CRITICAL", "Error in executing $name: $str")
+        val pc = DataRegistry.PC.get(data).value as Int
+        data.addLog("CRITICAL", "Error in executing $name: $str at line $pc")
         data.error = true
     }
 
