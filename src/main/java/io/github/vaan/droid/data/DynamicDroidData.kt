@@ -2,7 +2,7 @@ package io.github.vaan.droid.data
 
 import io.github.vaan.droid.data.accessor.DataAccessor
 import io.github.vaan.droid.instructions.base.Operation
-import io.github.vaan.droid.instructions.base.jump.PisaLabel
+import io.github.vaan.droid.instructions.jump.PisaLabel
 import org.bukkit.Bukkit
 import java.util.*
 

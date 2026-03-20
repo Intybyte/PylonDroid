@@ -1,7 +1,6 @@
 package io.github.vaan.droid.data
 
-import io.github.vaan.droid.data.accessor.ConstantAccessor
-import io.github.vaan.droid.instructions.base.jump.Jumpable
+import io.github.vaan.droid.instructions.jump.Jumpable
 import org.bukkit.NamespacedKey
 import java.util.UUID
 

@@ -5,8 +5,8 @@ import io.github.vaan.droid.instructions.base.PisaDie
 import io.github.vaan.droid.instructions.base.PisaNop
 import io.github.vaan.droid.instructions.base.PisaPrint
 import io.github.vaan.droid.instructions.base.PisaSet
-import io.github.vaan.droid.instructions.base.arithmetic.*
-import io.github.vaan.droid.instructions.base.jump.*
+import io.github.vaan.droid.instructions.arithmetic.*
+import io.github.vaan.droid.instructions.jump.*
 
 object DroidInstructions {
     fun init() {

@@ -1,4 +1,4 @@
-package io.github.vaan.droid.instructions.base.arithmetic
+package io.github.vaan.droid.instructions.arithmetic
 
 import io.github.vaan.droid.data.DynamicDroidData
 import io.github.vaan.droid.data.Valued

@@ -1,4 +1,4 @@
-package io.github.vaan.droid.instructions.base.jump
+package io.github.vaan.droid.instructions.jump
 
 import io.github.vaan.droid.data.DynamicDroidData
 
