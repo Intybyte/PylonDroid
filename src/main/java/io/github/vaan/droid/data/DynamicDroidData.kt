@@ -1,5 +1,6 @@
 package io.github.vaan.droid.data
 
+import io.github.vaan.droid.content.DroidBlock
 import io.github.vaan.droid.data.accessor.DataAccessor
 import io.github.vaan.droid.instructions.base.Operation
 import io.github.vaan.droid.instructions.jump.PisaLabel
@@ -37,6 +38,8 @@ class DynamicDroidData(val static: StaticDroidData) {
 
     var inventory = VirtualInventory(static.inventorySize)
         private set
+
+    var blockReference: DroidBlock? = null
 
     constructor(
         static: StaticDroidData,

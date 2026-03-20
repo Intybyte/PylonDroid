@@ -41,13 +41,17 @@ data class Operation(
 
     companion object {
         fun of(str: String): Operation? {
-            // "ADD A, #1, #2"
+            // "ADD A, 1, 2"
             val parts = str.trim().split(Regex("\\s+"), limit = 2)
 
             val opcode = parts[0].lowercase()
             val instruction = if (opcode != ";") {
-                val key = PylonDroid.key(opcode)
-                Instruction.REGISTRY[key] ?: return null
+                try {
+                    val key = PylonDroid.key(opcode)
+                    Instruction.REGISTRY[key] ?: return null
+                } catch (_: Exception) {
+                    return null
+                }
             } else {
                 PisaComment
             }

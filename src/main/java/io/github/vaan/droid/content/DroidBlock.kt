@@ -43,6 +43,7 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock, RebarLogisticBl
         dynamic = pdc.get(DYNAMIC_KEY, DynamicDroidDataSerializer)!!
         started = pdc.get(STARTED_KEY, RebarSerializers.BOOLEAN)!!
         setupCoordinates()
+        dynamic.blockReference = this
     }
 
     @Suppress("unused")
@@ -61,6 +62,7 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock, RebarLogisticBl
 
         started = false
         setupCoordinates()
+        dynamic.blockReference = this
     }
 
     override fun write(pdc: PersistentDataContainer) {
