@@ -7,6 +7,8 @@ import io.github.vaan.droid.instructions.base.PisaPrint
 import io.github.vaan.droid.instructions.base.PisaSet
 import io.github.vaan.droid.instructions.arithmetic.*
 import io.github.vaan.droid.instructions.jump.*
+import io.github.vaan.droid.instructions.stack.PisaPop
+import io.github.vaan.droid.instructions.stack.PisaPush
 
 object DroidInstructions {
     fun init() {
@@ -37,5 +39,9 @@ object DroidInstructions {
         PisaJgt.init()
         PisaJle.init()
         PisaJge.init()
+
+        // stack stuff
+        PisaPop.init()
+        PisaPush.init()
     }
 }
