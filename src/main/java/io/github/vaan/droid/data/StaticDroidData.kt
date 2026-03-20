@@ -14,14 +14,16 @@ data class StaticDroidData(
     val reach: Int,
     val damage: Int,
     val stackSize: Int,
-    val tickSpeed: Int
+    val tickSpeed: Int,
+    val inventorySize: Int
 ) {
     constructor(key: NamespacedKey) : this(
         key,
         Settings.get(key).getOrThrow("moving-speed", ConfigAdapter.INTEGER),
         Settings.get(key).getOrThrow("reach", ConfigAdapter.INTEGER),
         Settings.get(key).getOrThrow("damage", ConfigAdapter.INTEGER),
-        Settings.get(key).getOrThrow("stackSize", ConfigAdapter.INTEGER),
-        Settings.get(key).getOrThrow("tickSpeed", ConfigAdapter.INTEGER)
+        Settings.get(key).getOrThrow("stack-size", ConfigAdapter.INTEGER),
+        Settings.get(key).getOrThrow("tick-speed", ConfigAdapter.INTEGER),
+        Settings.get(key).getOrThrow("inventory-size", ConfigAdapter.INTEGER)
     )
 }

@@ -4,6 +4,7 @@ import io.github.vaan.droid.data.accessor.DataAccessor
 import io.github.vaan.droid.instructions.base.Operation
 import io.github.vaan.droid.instructions.jump.PisaLabel
 import org.bukkit.Bukkit
+import xyz.xenondevs.invui.inventory.VirtualInventory
 import java.util.*
 
 class DynamicDroidData(val static: StaticDroidData) {
@@ -30,8 +31,12 @@ class DynamicDroidData(val static: StaticDroidData) {
     var error: Boolean = false
     val log = LinkedList<String>()
 
-    private val operations = arrayListOf<Operation>()
+    val operations = arrayListOf<Operation>()
+
     val labels = HashMap<String, Int>()
+
+    var inventory = VirtualInventory(static.inventorySize)
+        private set
 
     constructor(
         static: StaticDroidData,
@@ -39,7 +44,8 @@ class DynamicDroidData(val static: StaticDroidData) {
         stack: List<Valued<*>>,
         error: Boolean,
         log: List<String>,
-        operations: List<Operation>
+        operations: List<Operation>,
+        inventory: VirtualInventory
     ) : this(static) {
 
         this.registryValues.putAll(registryValues)
@@ -57,6 +63,7 @@ class DynamicDroidData(val static: StaticDroidData) {
         this.log.addAll(log)
 
         setOperations(operations)
+        this.inventory = inventory
     }
 
     fun accessorOf(key: String) : DataAccessor? = DataAccessor.of(this, key)
@@ -72,7 +79,8 @@ class DynamicDroidData(val static: StaticDroidData) {
         listOf(),
         false,
         this.log,
-        this.operations
+        this.operations,
+        this.inventory
     )
 
     fun getOperations() : List<Operation> {

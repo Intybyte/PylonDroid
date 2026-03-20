@@ -1,5 +1,6 @@
 moving-speed: 5
 reach: 3
 damage: 2
-stackSize: 64
-tickSpeed: 10
+stack-size: 64
+tick-speed: 10
+inventory-size: 27

@@ -2,10 +2,13 @@ package io.github.vaan.droid.content
 
 import io.github.pylonmc.rebar.block.RebarBlock
 import io.github.pylonmc.rebar.block.base.RebarGuiBlock
+import io.github.pylonmc.rebar.block.base.RebarLogisticBlock
 import io.github.pylonmc.rebar.block.base.RebarTickingBlock
 import io.github.pylonmc.rebar.block.context.BlockBreakContext
 import io.github.pylonmc.rebar.block.context.BlockCreateContext
 import io.github.pylonmc.rebar.datatypes.RebarSerializers
+import io.github.pylonmc.rebar.logistics.LogisticGroupType
+import io.github.pylonmc.rebar.logistics.slot.VirtualInventoryLogisticSlot
 import io.github.pylonmc.rebar.util.gui.GuiItems
 import io.github.vaan.droid.PylonDroid
 import io.github.vaan.droid.data.DataRegistry
@@ -14,6 +17,7 @@ import io.github.vaan.droid.data.StaticDroidData
 import io.github.vaan.droid.data.Valued
 import io.github.vaan.droid.data.serializers.DynamicDroidDataSerializer
 import io.github.vaan.droid.gui.CodeItem
+import io.github.vaan.droid.gui.InventoryItem
 import io.github.vaan.droid.gui.LogItem
 import io.github.vaan.droid.gui.StartupItem
 import io.github.vaan.droid.instructions.base.PisaComment
@@ -23,7 +27,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import xyz.xenondevs.invui.gui.Gui
 
-class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
+class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock, RebarLogisticBlock {
     val static: StaticDroidData
     var dynamic: DynamicDroidData
 
@@ -64,6 +68,15 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
         pdc.set(STARTED_KEY, RebarSerializers.BOOLEAN, started)
     }
 
+    override fun postInitialise() {
+        val size = dynamic.inventory.size
+        val slots =  (0..<size).map {
+            VirtualInventoryLogisticSlot(dynamic.inventory, it)
+        }
+
+        createLogisticGroup("inventory", LogisticGroupType.BOTH, slots)
+    }
+
     fun setupCoordinates() {
         DataRegistry.X.rawSet(dynamic, Valued.IntVal(block.x))
         DataRegistry.Y.rawSet(dynamic, Valued.IntVal(block.y))
@@ -85,7 +98,7 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
         }
 
         // skips comments
-        while (pc < operations.size && operations[pc] == PisaComment) {
+        while (pc < operations.size && operations[pc].instruction == PisaComment) {
             pc++
         }
 
@@ -93,6 +106,8 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
             restart()
             return
         }
+
+        DataRegistry.PC.set(dynamic, Valued.IntVal(pc))
 
         val op = operations[pc]
         if ((DataRegistry.DBG.get(dynamic) as Valued.IntVal).value != 0) {
@@ -138,13 +153,14 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
     override fun createGui(): Gui = Gui.builder()
         .setStructure(
             "# # # # # # # # #",
-            "# o # c # l # # #",
+            "# o # c # l # i #",
             "# # # # # # # # #"
         )
         .addIngredient('#', GuiItems.background())
         .addIngredient('o', StartupItem(this))
         .addIngredient('c', CodeItem(this))
         .addIngredient('l', LogItem(this))
+        .addIngredient('i', InventoryItem(this))
         .build()
 
     companion object {

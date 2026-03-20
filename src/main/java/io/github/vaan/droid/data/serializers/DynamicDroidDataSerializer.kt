@@ -28,6 +28,7 @@ object DynamicDroidDataSerializer : PersistentDataType<PersistentDataContainer, 
     val instructionsKey = PylonDroid.key("instructions")
     val instructionsTypes = RebarSerializers.LIST.listTypeFrom(OperationSerializer)
 
+    val inventoryKey = PylonDroid.key("inventory")
 
     override fun getPrimitiveType(): Class<PersistentDataContainer> = PersistentDataContainer::class.java
 
@@ -45,6 +46,7 @@ object DynamicDroidDataSerializer : PersistentDataType<PersistentDataContainer, 
         pdc.set(errorKey, RebarSerializers.BOOLEAN, complex.error)
         pdc.set(logKey, logType, complex.log)
         pdc.set(instructionsKey, instructionsTypes, complex.getOperations())
+        pdc.set(inventoryKey, RebarSerializers.VIRTUAL_INVENTORY, complex.inventory)
 
         return pdc
     }
@@ -59,6 +61,7 @@ object DynamicDroidDataSerializer : PersistentDataType<PersistentDataContainer, 
         val error = primitive.get(errorKey, RebarSerializers.BOOLEAN)!!
         val log = primitive.get(logKey, logType)!!
         val instructions = primitive.get(instructionsKey, instructionsTypes)!!
+        val inventory = primitive.get(inventoryKey, RebarSerializers.VIRTUAL_INVENTORY)!!
 
         return DynamicDroidData(
             static,
@@ -66,7 +69,8 @@ object DynamicDroidDataSerializer : PersistentDataType<PersistentDataContainer, 
             stack,
             error,
             log,
-            instructions
+            instructions,
+            inventory
         )
     }
 }
