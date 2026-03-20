@@ -1,6 +1,7 @@
 package io.github.vaan.droid.instructions.base
 
 import io.github.pylonmc.rebar.registry.RebarRegistry
+import io.github.vaan.droid.DroidKeys
 import io.github.vaan.droid.PylonDroid
 import io.github.vaan.droid.data.DataRegistry
 import io.github.vaan.droid.data.DynamicDroidData
@@ -12,7 +13,7 @@ interface Instruction : Keyed {
     val name: String
     val description: String
 
-    fun getOwningInstructionSet() = BASE_INSTRUCTION_SET
+    fun getOwningInstructionSet() = DroidKeys.Ins.BASE
 
     override fun getKey(): NamespacedKey = PylonDroid.key(name.lowercase())
 
@@ -29,7 +30,6 @@ interface Instruction : Keyed {
     }
 
     companion object {
-        val BASE_INSTRUCTION_SET = PylonDroid.key("base_instruction_set")
 
         val REGISTRY_KEY = PylonDroid.key("instructions")
 

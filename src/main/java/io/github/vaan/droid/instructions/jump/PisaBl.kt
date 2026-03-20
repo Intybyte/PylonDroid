@@ -1,9 +1,11 @@
 package io.github.vaan.droid.instructions.jump
 
+import io.github.vaan.droid.DroidKeys
 import io.github.vaan.droid.data.DataRegistry
 import io.github.vaan.droid.data.DynamicDroidData
 import io.github.vaan.droid.data.Valued
 import io.github.vaan.droid.instructions.base.PisaBase
+import org.bukkit.NamespacedKey
 
 object PisaBl : PisaBase("BL", "Branch Link, jumping while saving the return address") {
     override fun execute(data: DynamicDroidData, args: Array<String>) {
@@ -38,4 +40,6 @@ object PisaBl : PisaBase("BL", "Branch Link, jumping while saving the return add
 
         DataRegistry.PC.set(data, Valued(toJump))
     }
+
+    override fun getOwningInstructionSet(): NamespacedKey = DroidKeys.Ins.JUMP
 }

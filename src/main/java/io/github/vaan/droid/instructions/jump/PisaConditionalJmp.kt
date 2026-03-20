@@ -1,9 +1,11 @@
 package io.github.vaan.droid.instructions.jump
 
+import io.github.vaan.droid.DroidKeys
 import io.github.vaan.droid.data.DataRegistry
 import io.github.vaan.droid.data.DynamicDroidData
 import io.github.vaan.droid.data.Valued
 import io.github.vaan.droid.instructions.base.PisaBase
+import org.bukkit.NamespacedKey
 
 abstract class PisaConditionalJmp(name: String, desc: String) : PisaBase(name, desc) {
     override fun execute(data: DynamicDroidData, args: Array<String>) {
@@ -38,6 +40,8 @@ abstract class PisaConditionalJmp(name: String, desc: String) : PisaBase(name, d
 
         DataRegistry.PC.set(data, Valued(toJump))
     }
+
+    override fun getOwningInstructionSet(): NamespacedKey = DroidKeys.Ins.JUMP
 
     abstract fun valid(cmp: Int): Boolean
 }
