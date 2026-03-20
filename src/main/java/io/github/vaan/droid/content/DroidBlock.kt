@@ -38,6 +38,7 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
     constructor(block: Block, pdc: PersistentDataContainer) : super(block, pdc) {
         dynamic = pdc.get(DYNAMIC_KEY, DynamicDroidDataSerializer)!!
         started = pdc.get(STARTED_KEY, RebarSerializers.BOOLEAN)!!
+        setupCoordinates()
     }
 
     @Suppress("unused")
@@ -55,11 +56,18 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock {
         }
 
         started = false
+        setupCoordinates()
     }
 
     override fun write(pdc: PersistentDataContainer) {
         pdc.set(DYNAMIC_KEY, DynamicDroidDataSerializer, dynamic)
         pdc.set(STARTED_KEY, RebarSerializers.BOOLEAN, started)
+    }
+
+    fun setupCoordinates() {
+        DataRegistry.X.rawSet(dynamic, Valued.IntVal(block.x))
+        DataRegistry.Y.rawSet(dynamic, Valued.IntVal(block.y))
+        DataRegistry.Z.rawSet(dynamic, Valued.IntVal(block.z))
     }
 
     override fun tick() {
