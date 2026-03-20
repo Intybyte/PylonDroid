@@ -5,7 +5,8 @@ import io.github.vaan.droid.data.DynamicDroidData
 
 data class Operation(
     val instruction: Instruction,
-    val args: Array<String>
+    val args: Array<String>,
+    val comment: String? = null
 ) {
     fun execute(data: DynamicDroidData) {
         instruction.execute(data, args)
@@ -30,13 +31,29 @@ data class Operation(
     }
 
     override fun toString(): String {
-        val name = instruction.name.uppercase()
+        val strBuilder = StringBuilder()
+            .append(instruction.name.uppercase() + " ")
 
-        return if (args.isEmpty()) {
-            name
-        } else {
-            "$name ${args.joinToString(", ")}"
+        if (args.isNotEmpty()) {
+            strBuilder.append(args.joinToString(", "))
         }
+
+        if (comment != null) {
+            strBuilder.append(" ; $comment")
+        }
+
+        return strBuilder.toString()
+    }
+
+    fun operationString(): String {
+        val strBuilder = StringBuilder()
+            .append(instruction.name.uppercase() + " ")
+
+        if (args.isNotEmpty()) {
+            strBuilder.append(args.joinToString(", "))
+        }
+
+        return strBuilder.toString()
     }
 
     companion object {
@@ -44,7 +61,10 @@ data class Operation(
             // "ADD A, 1, 2"
             val parts = str.trim().split(Regex("\\s+"), limit = 2)
 
-            val opcode = parts[0].lowercase()
+            // get opcode comment if it is present here
+            val splittedOpcode = parts[0].split(';', limit = 2)
+            val opcode = splittedOpcode[0].lowercase()
+
             val instruction = if (opcode != ";") {
                 try {
                     val key = PylonDroid.key(opcode)
@@ -63,7 +83,25 @@ data class Operation(
                 ?.toTypedArray()
                 ?: emptyArray()
 
-            return Operation(instruction, args)
+            if (args.isNotEmpty()) {
+
+                val last = args[args.size - 1]
+                val splitComment = last.split(';', limit = 2)
+
+                // no comment
+                if (splitComment.size == 1) {
+                    return Operation(instruction, args)
+                } else {
+                    // comment found
+                    args[args.size - 1] = splitComment[0]
+                    return Operation(instruction, args, splitComment[1].trim())
+                }
+            } else if (splittedOpcode.size == 2) {
+                // comment at opcode
+                return Operation(instruction, args, splittedOpcode[1].trim())
+            } else {
+                return Operation(instruction, args, null)
+            }
         }
     }
 }

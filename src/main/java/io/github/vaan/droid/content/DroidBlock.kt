@@ -113,7 +113,7 @@ class DroidBlock : RebarBlock, RebarTickingBlock, RebarGuiBlock, RebarLogisticBl
 
         val op = operations[pc]
         if ((DataRegistry.DBG.get(dynamic) as Valued.IntVal).value != 0) {
-            dynamic.addLog("DEBUG", "Executing $op at line $pc")
+            dynamic.addLog("DEBUG", "Executing ${op.operationString()} at line $pc")
         }
         op.execute(dynamic)
 

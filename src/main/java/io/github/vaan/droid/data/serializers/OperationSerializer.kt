@@ -1,6 +1,7 @@
 package io.github.vaan.droid.data.serializers
 
 import io.github.pylonmc.rebar.datatypes.RebarSerializers
+import io.github.pylonmc.rebar.util.setNullable
 import io.github.vaan.droid.PylonDroid
 import io.github.vaan.droid.instructions.base.Instruction
 import io.github.vaan.droid.instructions.base.Operation
@@ -18,6 +19,8 @@ object OperationSerializer : PersistentDataType<PersistentDataContainer, Operati
     val argKey = PylonDroid.key("arguments")
     val argType = RebarSerializers.LIST.strings()
 
+    val commentKey = PylonDroid.key("comment")
+
     override fun getPrimitiveType(): Class<PersistentDataContainer> = PersistentDataContainer::class.java
 
     override fun getComplexType(): Class<Operation> = Operation::class.java
@@ -26,6 +29,7 @@ object OperationSerializer : PersistentDataType<PersistentDataContainer, Operati
         val pdc = context.newPersistentDataContainer()
         pdc.set(instructionKey, instructionType, complex.instruction)
         pdc.set(argKey, argType, complex.args.toList())
+        pdc.setNullable(commentKey, RebarSerializers.STRING, complex.comment)
         return pdc
     }
 
@@ -39,6 +43,8 @@ object OperationSerializer : PersistentDataType<PersistentDataContainer, Operati
             ?.toTypedArray()
             ?: emptyArray()
 
-        return Operation(instruction, args)
+        val comment = primitive.get(commentKey, RebarSerializers.STRING)
+
+        return Operation(instruction, args, comment)
     }
 }
